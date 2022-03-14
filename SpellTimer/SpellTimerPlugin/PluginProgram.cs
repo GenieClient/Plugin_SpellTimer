@@ -203,11 +203,8 @@ namespace SpellTimerPlugin
 
             if (xml.Equals("<clearStream id=\"percWindow\"/>"))
             {
-                //## Starting a new XML steam.
-                //this._host.EchoText("clearStream start");
-                this.poppedSpells = new List<Spell>();
-
-                this.finishPop();
+                this.finishPop(); //clear everything that wasn't updated on the last round of spell updates
+                this.poppedSpells = new List<Spell>(); //clear the list for the next round of spell updates
             }
             Match castMatch = CastBar.CASTPATTERN.Match(xml);
             if (castMatch.Success)
@@ -386,7 +383,7 @@ namespace SpellTimerPlugin
 
         public string Version
         {
-            get { return "1.8"; }
+            get { return "1.9"; }
         }
 
         public string Description
@@ -396,7 +393,7 @@ namespace SpellTimerPlugin
 
         public string Author
         {
-            get { return "UFTimmy @ AIM"; }
+            get { return "Original by UFTimmy. Genie 4 branch maintained by the Genie Client Team."; }
         }
 
         public bool Enabled
