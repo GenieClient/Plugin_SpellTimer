@@ -411,7 +411,7 @@ namespace SpellTimerPlugin
 
         public string Version
         {
-            get { return "1.9"; }
+            get { return "1.10"; }
         }
 
         public string Description
