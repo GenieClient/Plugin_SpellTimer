@@ -1,5 +1,7 @@
 # SpellTimerPlugin
-Plugin for the Genie3 client (http://genieclient.com)
+Plugin for the Genie client (https://github.com/GenieClient/Genie4)
+
+[Text from original author]
 
 I have created a plugin that takes the spells from the new Spell Timer window just released and stores the data as Genie variables so that you can keep track of what buffs you have active.
 
