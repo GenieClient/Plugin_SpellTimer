@@ -16,6 +16,7 @@ namespace SpellTimerPlugin
             public string name;
             public bool active = false;
             public int duration = 0;
+            public int charge;
         }
 
         private bool _enabled = true;
@@ -110,11 +111,23 @@ namespace SpellTimerPlugin
 
                 string spellName = match.Success ? match.Groups[1].Value.Trim() : text.Trim();
                 int duration = 0;
+                int charge = 0;
                 bool active = true;
                 bool success = false;
                 if (match.Success)
                 {
                     success = true;
+                    if (spellName.Equals("Stellar Collector"))
+                    {
+                        Regex stcPattern = new Regex("(\\d+)%");
+                        Match stcMatch = stcPattern.Match(match.Groups[2].Value);
+
+                        if (stcMatch.Success)
+                        {
+                            charge = Convert.ToInt32(stcMatch.Groups[1].Value);
+                        }
+                    }
+
                     if (spellName.Equals("Osrel Meraud"))
                     {
                         Regex omPattern = new Regex("(\\d+)%");
@@ -163,7 +176,7 @@ namespace SpellTimerPlugin
 
                 if (success)
                 {
-                    Spell poppedSpell = new Spell { name = spellName, active = active, duration = duration };
+                    Spell poppedSpell = new Spell { name = spellName, active = active, duration = duration, charge = charge };
 
                     //this._host.EchoText("Update for " + poppedSpell.name + " - Duration: " + poppedSpell.duration.ToString());
 
@@ -176,6 +189,7 @@ namespace SpellTimerPlugin
 
                             spell.active = active;
                             spell.duration = duration;
+                            spell.charge = charge;
                             break;
                         }
                     }
@@ -240,6 +254,7 @@ namespace SpellTimerPlugin
                     {
                         spell.active = false;
                         spell.duration = 0;
+                        spell.charge = 0;
 
                         //this._host.EchoText(spell.name + " is not on the list, set to inactive.");
                     }
@@ -277,8 +292,20 @@ namespace SpellTimerPlugin
                         //this._host.EchoText("Updating " + spell.name + " duration to " + durationValue);
                         this._host.SendText("#var " + durationVar + " " + durationValue);
                     }
+
+                    if (spell.name.Equals("Stellar Collector"))
+                        {
+                            string chargeVar = "SpellTimer." + this.spellNameToVariableName(spell.name) + ".charge";
+                            string chargeValue = spell.charge.ToString();
+                            if (!this._host.get_Variable(chargeVar).Equals(chargeValue))
+                            {
+                                //this._host.EchoText("Updating " + spell.name + " charge to " + chargeValue);
+                                this._host.SendText("#var " + chargeVar + " " + chargeValue);
+                            }
+                        }
                     //this._host.SendText("#var SpellTimer." + this.spellNameToVariableName(spell.name) + ".active " + (spell.active ? "1" : "0"));
                     //this._host.SendText("#var SpellTimer." + this.spellNameToVariableName(spell.name) + ".duration " + spell.duration.ToString());
+                    //this._host.SendText("#var SpellTimer." + this.spellNameToVariableName(spell.name) + ".charge " + spell.charge.ToString());
                     //this._host.SendText("#save vars");
 
                     //this._host.EchoText("Setting " + spellVarName + " to " + (spell.active ? "1" : "0"));
